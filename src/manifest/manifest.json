@@ -1,0 +1,69 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.9",
+  "version": "0.9.0",
+  "id": "e78a71dd-829b-4a5f-a2b9-fc11c33010c0",
+  "packageName": "mazerobo",
+  "developer": {
+      "name": "Anthony Nolan",
+      "websiteUrl": "https://coderdojokinsale.com",
+      "privacyUrl": "https://coderdojokinsale.com",
+      "termsOfUseUrl": "https://coderdojokinsale.com"
+  },
+  "icons": {
+      "color": "color.png",
+      "outline": "outline.png"
+  },
+  "name": {
+      "short": "Maze Robo",
+      "full": "Maze Robo"
+  },
+  "description": {
+      "short": "Maze Robo is here!",
+      "full": "Maze Robo is now available in Microsoft Teams,"
+  },
+  "accentColor": "#FFFFFF",
+  "staticTabs": [
+      {
+          "entityId": "conversations",
+          "scopes": [
+              "personal"
+          ]
+      },
+      {
+          "entityId": "about",
+          "scopes": [
+              "personal"
+          ]
+      }
+  ],
+  "bots": [
+      {
+          "botId": "38cf894f-7e40-4e5a-b70a-ceecd140f9df",
+          "scopes": [
+              "team",
+              "personal"
+          ],
+          "commandLists": [
+              {
+                  "scopes": [
+                      "personal"
+                  ],
+                  "commands": [
+                      {
+                          "title": "MentionMe",
+                          "description": "Sends message with @mention of the sender"
+                      }
+                  ]
+              }
+          ],
+          "supportsFiles": false,
+          "isNotificationOnly": false
+      }
+  ],
+  "permissions": [
+      "identity",
+      "messageTeamMembers"
+  ],
+  "validDomains": []
+}
