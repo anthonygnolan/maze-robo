@@ -139,7 +139,7 @@ export class MazeRobo extends TeamsActivityHandler {
       headers: {'Content-Type': 'application/json; charset=UTF-8'} 
     });
 
-    const replyActivity = MessageFactory.text(`${context.activity.from.name} turned the light on.`);
+    const replyActivity = MessageFactory.text(` Sure ${context.activity.from.name}, I have turned the light on.`);
     await context.sendActivity(replyActivity);
   }
 
@@ -150,7 +150,7 @@ export class MazeRobo extends TeamsActivityHandler {
       headers: {'Content-Type': 'application/json; charset=UTF-8'} 
     });
 
-    const replyActivity = MessageFactory.text(`${context.activity.from.name} turned the light off.`);
+    const replyActivity = MessageFactory.text(`Sure ${context.activity.from.name}, I have turned the light off.`);
     await context.sendActivity(replyActivity);
   }
 
