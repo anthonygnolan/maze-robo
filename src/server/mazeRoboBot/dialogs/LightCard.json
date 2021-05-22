@@ -1,0 +1,40 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Hit the lights!",
+          "weight": "bolder",
+          "size": "large"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "I can control the light in Anthony's sitting room. Select an option below. Woop Woop",
+          "wrap": true
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+        "type": "Action.Submit",
+        "title": "Turn On",
+        "data": { "cardAction": "turnOn"}
+      },
+      {
+        "type": "Action.Submit",
+        "title": "Turn Off",
+        "data": { "cardAction": "turnOff"}
+      }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+      {
+        "type": "Container",
+        "items": [
+          {
+            "type": "TextBlock",
+            "text": "Change the colour!",
+            "weight": "bolder",
+            "size": "large"
+          }
+        ]
+      },
+      {
+        "type": "Container",
+        "items": [
+          {
+            "type": "TextBlock",
+            "text": "Change the colour of the light in Anthony's sitting room. Select one of the colours below.",
+            "wrap": true
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+          "type": "Action.Submit",
+          "title": "Purple",
+          "data": { "cardAction": "changeColourPurple"}
+        },
+        {
+          "type": "Action.Submit",
+          "title": "Teal",
+          "data": { "cardAction": "changeColourTeal"}
+        },
+        {
+            "type": "Action.Submit",
+            "title": "Orange",
+            "data": { "cardAction": "changeColourOrange"}
+        }
+    ]
+  }
