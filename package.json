@@ -21,6 +21,7 @@
     "express-msteams-host": "1.7.0",
     "express-session": "1.15.6",
     "morgan": "1.9.1",
+    "node-fetch": "^2.6.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },

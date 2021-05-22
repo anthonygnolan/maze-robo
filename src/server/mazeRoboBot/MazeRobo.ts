@@ -5,10 +5,12 @@ import { StatePropertyAccessor, CardFactory, TurnContext, MemoryStorage, Convers
 import HelpDialog from "./dialogs/HelpDialog";
 import WelcomeCard from "./dialogs/WelcomeDialog";
 import * as Util from "util";
+import ColourCard from "./dialogs/ColourDialog";
+import * as request from "request-promise-native";
 const TextEncoder = Util.TextEncoder;
 // Initialize debug logging module
 const log = debug("msteams");
-
+const fetch = require('node-fetch');
 /**
  * Implementation for Maze Robo
  */
@@ -36,29 +38,56 @@ export class MazeRobo extends TeamsActivityHandler {
         this.dialogState = conversationState.createProperty("dialogState");
         this.dialogs = new DialogSet(this.dialogState);
         this.dialogs.add(new HelpDialog("help"));
+
         // Set up the Activity processing
+
         this.onMessage(async (context: TurnContext): Promise<void> => {
             // TODO: add your own bot logic in here
             switch (context.activity.type) {
                 case ActivityTypes.Message:
-                    {
-                        let text = TurnContext.removeRecipientMention(context.activity);
-                        text = text.toLowerCase();
-                        if (text.startsWith("mentionme")) {
-                            await this.handleMessageMentionMeOneOnOne(context);
-                            return;
-                          } else if (text.startsWith("hello")) {
-                            await context.sendActivity("Beep boo beep boo");
-                            return;
-                        } else if (text.startsWith("help")) {
-                            const dc = await this.dialogs.createContext(context);
-                            await dc.beginDialog("help");
-                        } else {
-                            await context.sendActivity("I'm terribly sorry, but my developer hasn't trained me to do anything yet...");
+                    if (context.activity.value) {
+                        switch (context.activity.value.cardAction) {
+                          case "turnOn":
+                            await this.turnOnCardActivity(context);
+                            break;
+                          case "turnOff":
+                            await this.turnOffCardActivity(context);
+                            break;
+                          case "changeColourPurple":
+                            await this.changeColourPurpleCardActivity(context);
+                            break;
+                          case "changeColourTeal":
+                            await this.changeColourTealCardActivity(context);
+                            break;
+                          case "changeColourOrange":
+                            await this.changeColourOrangeCardActivity(context);
+                            break;
                         }
+                    } else {
+                    let text = TurnContext.removeRecipientMention(context.activity);
+                    text = text.toLowerCase();
+                    if (text.startsWith("mentionme")){
+                        await this.handleMessageMentionMeOneOnOne(context);
+                        return;
+                    } else if (text.startsWith("hello")) {
+                        await context.sendActivity("Oh, hello to you as well!");
+                        return;
+                    } else if (text.startsWith("help")) {
+                        const dc = await this.dialogs.createContext(context);
+                        await dc.beginDialog("help");
+                    } else if (text.startsWith("change colour")){
+                        const colourCard = CardFactory.adaptiveCard(ColourCard);
+                        await context.sendActivity({ attachments: [colourCard] });
+                    } else if (text.startsWith("turn on")){
+                        await this.handleMessageTurnOn(context);
+                    } else if (text.startsWith("turn off")){
+                        await this.handleMessageTurnOff(context);
+                    } else {
+                        await context.sendActivity(`I\'m terribly sorry, but my master hasn\'t trained me to do anything yet...`);
                     }
                     break;
-                default:
+                    }
+                    default:
                     break;
             }
             // Save state changes
@@ -84,7 +113,7 @@ export class MazeRobo extends TeamsActivityHandler {
                     text: `That was an interesting reaction (<b>${added[0].type}</b>)`
                 });
             }
-        });
+        });;
    }
 
    private async handleMessageMentionMeOneOnOne(context: TurnContext): Promise<void> {
@@ -96,6 +125,100 @@ export class MazeRobo extends TeamsActivityHandler {
   
     const replyActivity = MessageFactory.text(`Hi ${mention.text} from a 1:1 chat.`);
     replyActivity.entities = [mention];
+    await context.sendActivity(replyActivity);
+  }
+
+  private async deleteCardActivity(context): Promise<void> {
+    await context.deleteActivity(context.activity.replyToId);
+  }
+
+  private async handleMessageTurnOn(context): Promise<void> {
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": true, "hue": 2002, "sat":254}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} turned the light on.`);
+    await context.sendActivity(replyActivity);
+  }
+
+  private async handleMessageTurnOff(context): Promise<void> {
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": false}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} turned the light off.`);
+    await context.sendActivity(replyActivity);
+  }
+
+  private async changeColourPurpleCardActivity(context): Promise<void> {
+    await context.deleteActivity(context.activity.replyToId);
+
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": true, "hue": 51245, "sat":254}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} changed the colour to purple.`);
+    await context.sendActivity(replyActivity);
+  }
+
+  private async changeColourTealCardActivity(context): Promise<void> {
+    await context.deleteActivity(context.activity.replyToId);
+
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": true, "hue": 38775, "sat":254}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} changed the colour to teal.`);
+    await context.sendActivity(replyActivity);
+  }
+
+  private async changeColourOrangeCardActivity(context): Promise<void> {
+    await context.deleteActivity(context.activity.replyToId);
+
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": true, "hue": 2002, "sat":254}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} changed the colour to orange.`);
+    await context.sendActivity(replyActivity);
+  }
+
+  private async turnOnCardActivity(context): Promise<void> {
+    await context.deleteActivity(context.activity.replyToId);
+
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": true, "hue": 2002, "sat":254}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+
+    var purple = '{"on": true, "hue": 51245, "sat":254}';
+    var teal = '{"on": true, "hue": 38775, "sat":254}';
+    var orange = '{"on": true, "hue": 2002, "sat":254}';
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} turned the light on.`);
+    await context.sendActivity(replyActivity);
+  }
+
+  private async turnOffCardActivity(context): Promise<void> {
+    await context.deleteActivity(context.activity.replyToId);
+
+    const response = await fetch(process.env.URL, {
+      method: 'PUT',
+      body: '{"on": false}',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'} 
+    });
+    
+    const replyActivity = MessageFactory.text(`${context.activity.from.name} turned the light off.`);
     await context.sendActivity(replyActivity);
   }
 
